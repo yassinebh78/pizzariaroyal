@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Pizzaria Royal - Menu de pizzas, sandwiches, libanais, plats et boissons">
+<meta name="theme-color" content="#c09a1b">
+<title>Pizzaria Royal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"></noscript>
+
+<style>
+:root {
+  --main: #c09a1b;
+  --main-dark: #a6841a;
+  --bg: #f7f7f7;
+  --card: #ffffff;
+  --text: #222;
+  --price: #b33a2b;
+  --nav-height: 52px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 12px);
+}
+
+body {
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 20px;
+  padding-top: calc(var(--nav-height) + 20px);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+}
+
+/* Sticky Navigation */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+#callWaiter{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nav a {
+  flex-shrink: 0;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--bg);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav a:hover {
+  background: var(--main);
+  color: #fff;
+}
+
+.nav a:active {
+  transform: scale(0.95);
+}
+
+.container {
+  max-width: 720px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--main);
+  font-size: 28px;
+  font-weight: 700;
+  opacity: 0;
+  animation: fadeSlideDown 0.5s ease forwards;
+}
+
+/* Section animations */
+.section {
+  margin-bottom: 32px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  will-change: opacity, transform;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-title {
+  background: var(--main);
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-title span {
+  font-size: 13px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  padding: 3px 10px;
+  border-radius: 12px;
+  color: #fff;
+  float: none;
+}
+
+.menu-item {
+  background: var(--card);
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  contain: layout style;
+}
+
+.menu-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.menu-item:active {
+  transform: scale(0.99);
+}
+
+.item-info h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.item-info p {
+  font-size: 12.5px;
+  color: #777;
+  line-height: 1.4;
+}
+
+.price {
+  font-weight: 700;
+  color: var(--price);
+  white-space: nowrap;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.c2 {
+  color: #b33a2b;
+}
+
+/* Animations */
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Back to top button */
+
+.back-to-top.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  background: var(--main-dark);
+}
+
+.back-to-top:active {
+  transform: scale(0.9);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+    padding-top: calc(var(--nav-height) + 12px);
+  }
+
+  .nav {
+    padding: 0 10px;
+    gap: 4px;
+  }
+
+  .nav a {
+    font-size: 12px;
+    padding: 5px 11px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .menu-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .price {
+    margin-left: 0;
+    margin-top: 2px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .back-to-top {
+    bottom: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .section {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  h1 {
+    animation: none;
+    opacity: 1;
+  }
+  .menu-item {
+    transition: none;
+  }
+  .back-to-top {
+    transition: none;
+  }
+}
+/* Floating Call Waiter Button */
+.call-waiter-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--main);
+  color: #fff;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  z-index: 999;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.call-waiter-btn:hover {
+  background: var(--main-dark);
+  transform: translateY(-2px);
+}
+
+.call-waiter-btn:active {
+  transform: scale(0.95);
+}
+</style>
+</head>
+
+<body>
+
+<!-- Sticky Navigation -->
+<nav class="nav" aria-label="Menu sections">
+  <a href="#pizzas">🍕 Pizzas</a>
+  <a href="#sandwiches">🥪 Sandwiches</a>
+  <a href="#libanais">🌯 Libanais</a>
+  <a href="#plats">🍽️ Plats</a>
+  <a href="#boissons">🥤 Boissons</a>
+</nav>
+
+<div class="container">
+
+<h1>Pizza Royal</h1>
+
+<!-- PIZZAS -->
+<div class="section" id="pizzas">
+  <div class="section-title">🍕 Pizzas <span>Mini / Moyenne</span></div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Margherita</h3>
+      <p>Sauce tomate, fromage, origan, olives</p>
+    </div>
+    <div class="price">6.5DT / 11DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Thon</h3>
+      <p>Sauce tomate, thon, fromage, olives, poivron, oignon, origan, œuf</p>
+    </div>
+    <div class="price">7DT / 13DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Orientale</h3>
+      <p>Sauce tomate, fromage, erguez, poivron, oignon, origan</p>
+    </div>
+    <div class="price">8.5DT / 14DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Calzone</h3>
+      <p>Sauce tomate, fromage, olives, oignon, salami, origan</p>
+    </div>
+    <div class="price">7DT / 13DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Regina</h3>
+      <p>Sauce tomate, thon, salami, fromage, olives, origan</p>
+    </div>
+    <div class="price">7.5DT / 14DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>4 saisons</h3>
+      <p>Sauce tomate, fromage, champignons, olives, poivron, oignon, œuf, thon</p>
+    </div>
+    <div class="price">8.5DT / 15DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Viande Hachée</h3>
+      <p>Sauce tomate, fromage, olives, viande hachée, oignon, origan, poivron</p>
+    </div>
+    <div class="price">11DT / 23DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Royal</h3>
+      <p>Sauce tomate, fromage, salami, merguez, oignon, poivron, champignon, œuf, olives, origan</p>
+    </div>
+    <div class="price">9DT / 17DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Escalope</h3>
+      <p>Sauce tomate, fromage, escalope, merguez, oignon, poivron, champignon, œuf, olives, origan</p>
+    </div>
+    <div class="price">9DT / 17DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>4 fromages</h3>
+      <p>Sauce tomate, fromage, 4 fromages, olives</p>
+    </div>
+    <div class="price">8.5DT / 16DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Fruits de mer</h3>
+      <p>Sauce tomate, fromage, fruits de mer, origan, olives</p>
+    </div>
+    <div class="price">11DT / 23DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Galette Thon</h3>
+      <p>Sauce tomate, fromage, origan, poivron, thon, oignon</p>
+    </div>
+    <div class="price">7.5DT / 13.5DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Galette Escalope</h3>
+      <p>Sauce tomate, fromage, origan, poivron, escalope, oignon</p>
+    </div>
+    <div class="price">9DT / 17DT</div>
+  </div>
+</div>
+
+<!-- SANDWICHES -->
+<div class="section" id="sandwiches">
+  <div class="section-title">🥪 Sandwiches Tabouna</div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Sandwich Oeuf</h3>
+      <p>Harissa, salade, salade mechouia, frites, olives</p>
+    </div>
+    <div class="price">4DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Sandwich Thon</h3>
+      <p>Harissa, salade mechouia, thon, frites, olives</p>
+    </div>
+    <div class="price">6DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Sandwich Salami</h3>
+      <p>Harissa, salade, salade mechouia, salami, frites, olives</p>
+    </div>
+    <div class="price">4.5DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Sandwich Thon + Oeuf</h3>
+      <p>Harissa, salade mechouia, thon, frites, olives, oeuf</p>
+    </div>
+    <div class="price">6.5DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Sandwich Salami + Oeuf</h3>
+      <p>Harissa, salade mechouia, salami, frites, olives, oeuf</p>
+    </div>
+    <div class="price">5.5DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Sandwich Thon + Salami</h3>
+      <p>Harissa, salade mechouia, thon, salami, frites, olives</p>
+    </div>
+    <div class="price">6.5DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Sandwich Merguez</h3>
+      <p>Harissa, salade mechouia, merguez, frites, olives, oeuf</p>
+    </div>
+    <div class="price">7DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Sandwich Escalope</h3>
+      <p>Harissa, salade mechouia, escalope, frites, olives, oeuf</p>
+    </div>
+    <div class="price">7DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Sandwich Chawarma</h3>
+      <p>Harissa, salade mechouia, chawarma, frites, olives, oeuf</p>
+    </div>
+    <div class="price">7DT</div>
+  </div>
+</div>
+
+<!-- LIBANAIS -->
+<div class="section" id="libanais">
+  <div class="section-title">🌯 Libanais</div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Libanais Escalope</h3>
+      <p>Harissa, salade mechouia, escalope, fromage, frites</p>
+    </div>
+    <div class="price">8DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Makloub</h3>
+      <p>Double fromage, harissa, salade mechouia, escalope, frites</p>
+    </div>
+    <div class="price">8.5DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Baguette Farcie</h3>
+      <p>Double fromage, harissa, salade mechouia, escalope, frites</p>
+    </div>
+    <div class="price">14DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Mini Baguette Farcie</h3>
+      <p>Double fromage, harissa, salade mechouia, escalope, frites</p>
+    </div>
+    <div class="price">8DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3 class="c2">CHICKEN CHICKA</h3>
+    </div>
+    <div class="price">8DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3 class="c2">TACOS</h3>
+    </div>
+    <div class="price">8DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3 class="c2">CHEESE NAAN</h3>
+    </div>
+    <div class="price">8DT</div>
+  </div>
+</div>
+
+<!-- PLATS -->
+<div class="section" id="plats">
+  <div class="section-title">🍽️ Plats</div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Thon Oeuf</h3>
+      <p>Harissa, salade mechouia, oeuf, frites, olives, thon</p>
+    </div>
+    <div class="price">9DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Escalope</h3>
+      <p>Harissa, salade mechouia, oeuf, frites, olives, escalope</p>
+    </div>
+    <div class="price">12DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Chawarma</h3>
+      <p>Harissa, salade mechouia, oeuf, frites, olives, chawarma</p>
+    </div>
+    <div class="price">12DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Merguez</h3>
+      <p>Harissa, salade mechouia, oeuf, frites, olives, merguez</p>
+    </div>
+    <div class="price">12DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Mixte</h3>
+      <p>Harissa, salade mechouia, oeuf, frites, olives, escalope, chawarma, merguez</p>
+    </div>
+    <div class="price">12DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Escalope Pané</h3>
+      <p>Harissa, salade mechouia, oeuf, frites, olives, escalope pané</p>
+    </div>
+    <div class="price">12DT</div>
+  </div>
+</div>
+
+<!-- BOISSONS -->
+<div class="section" id="boissons">
+  <div class="section-title">🥤 Boissons</div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Coca Standard</h3>
+    </div>
+    <div class="price">1.5DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Coca Canette</h3>
+    </div>
+    <div class="price">2.5DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Coca 1L</h3>
+    </div>
+    <div class="price">3.5DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Oh jus 0.5L</h3>
+    </div>
+    <div class="price">2.5DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Eau 0.5L</h3>
+    </div>
+    <div class="price">1DT</div>
+  </div>
+
+  <div class="menu-item">
+    <div class="item-info">
+      <h3>Eau 1.5L</h3>
+    </div>
+    <div class="price">2DT</div>
+  </div>
+</div>
+</div>
+<button class="call-waiter-btn" onclick="callWaiter()">
+  🔔 Appeler le serveur
+</button>
+
+<!-- Back to top button -->
+<button class="back-to-top" aria-label="Retour en haut" onclick="window.scrollTo({top:0})">&#8593;</button>
+
+<script>
+// Intersection Observer for scroll-reveal animations
+(function() {
+  var sections = document.querySelectorAll('.section');
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) {
+          entries[i].target.classList.add('visible');
+          observer.unobserve(entries[i].target);
+        }
+      }
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    for (var i = 0; i < sections.length; i++) {
+      observer.observe(sections[i]);
+    }
+  } else {
+    // Fallback: show all sections immediately
+    for (var i = 0; i < sections.length; i++) {
+      sections[i].classList.add('visible');
+    }
+  }
+
+  // Back to top button visibility
+  var btn = document.querySelector('.back-to-top');
+  var scrollTimer;
+  window.addEventListener('scroll', function() {
+    if (scrollTimer) return;
+    scrollTimer = setTimeout(function() {
+      scrollTimer = null;
+      if (window.scrollY > 400) {
+        btn.classList.add('show');
+      } else {
+        btn.classList.remove('show');
+      }
+    }, 100);
+  }, { passive: true });
+
+  // Highlight active nav link on scroll
+  var navLinks = document.querySelectorAll('.nav a');
+  var sectionIds = [];
+  for (var i = 0; i < navLinks.length; i++) {
+    sectionIds.push(navLinks[i].getAttribute('href').substring(1));
+  }
+
+  var navTimer;
+  window.addEventListener('scroll', function() {
+    if (navTimer) return;
+    navTimer = setTimeout(function() {
+      navTimer = null;
+      var scrollPos = window.scrollY + 80;
+      var activeIdx = 0;
+      for (var i = 0; i < sectionIds.length; i++) {
+        var el = document.getElementById(sectionIds[i]);
+        if (el && el.offsetTop <= scrollPos) {
+          activeIdx = i;
+        }
+      }
+      for (var i = 0; i < navLinks.length; i++) {
+        if (i === activeIdx) {
+          navLinks[i].style.background = '#c09a1b';
+          navLinks[i].style.color = '#fff';
+        } else {
+          navLinks[i].style.background = '';
+          navLinks[i].style.color = '';
+        }
+      }
+    }, 100);
+  }, { passive: true });
+})();
+const TABLE_NUMBER = 5;
+const BOT_TOKEN = "8649775029:AAGyb7T61wK7u0ik3Obz1VfXblxehauwa70";
+const CHAT_ID = "5475176909";
+
+function callWaiter() {
+  fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      text: `🔔 La table ${TABLE_NUMBER} appelle le serveur.`
+    })
+  });
+
+  alert("✅ Le serveur arrive.");
+}
+</script>
+</body>
+</html>
